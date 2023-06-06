@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Статистика заказов</title>
+</head>
+
+<head th:insert="blocks\head :: head"></head>
+
+
+<body id="page-top">
+<div id="wrapper">
+    <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-success p-0 accent"
+         th:insert="blocks/navLeft :: nav" style="background: radial-gradient(#ced1c6, #02283a);"></nav>
+    <div class="d-flex flex-column" id="content-wrapper" style="background: rgb(220,220,220);">
+        <div id="content">
+            <div class="container-fluid">
+                <h3 class="text-dark mb-4 mt-3">Статистика</h3>
+                <hr>
+                <h4>Статусы заказов</h4>
+                <table width="100%">
+                    <tr>
+                        <th>Все</th>
+                        <th>Зарезервировано</th>
+                        <th>Не зарезервировано</th>
+                        <th>Доставка</th>
+                        <th>Доставлено</th>
+                    </tr>
+                    <tr>
+                        <td id="orderingStatus0" th:text="${orderingStatus.get(0)}"></td>
+                        <td id="orderingStatus1" th:text="${orderingStatus.get(1)}"></td>
+                        <td id="orderingStatus2" th:text="${orderingStatus.get(2)}"></td>
+                        <td id="orderingStatus3" th:text="${orderingStatus.get(3)}"></td>
+                        <td id="orderingStatus4" th:text="${orderingStatus.get(4)}"></td>
+                    </tr>
+                </table>
+                <hr>
+                <div id="orderingStatus" style="width: 100%; height: 500px;"></div>
+                <hr>
+                <h4>Цена заказов</h4>
+                <table class="w-100">
+                    <tr>
+                        <th>Все</th>
+                        <th>Зарезервировано</th>
+                        <th>Не зарезервировано</th>
+                        <th>Доставка</th>
+                        <th>Доставлено</th>
+                    </tr>
+                    <tr>
+                        <td id="orderingPrice0" th:text="${orderingPrice[0]}"></td>
+                        <td id="orderingPrice1" th:text="${orderingPrice[1]}"></td>
+                        <td id="orderingPrice2" th:text="${orderingPrice[2]}"></td>
+                        <td id="orderingPrice3" th:text="${orderingPrice[3]}"></td>
+                        <td id="orderingPrice4" th:text="${orderingPrice[4]}"></td>
+                    </tr>
+                </table>
+                <hr>
+                <div id="orderingPrice" style="width: 100%; height: 500px;"></div>
+                <hr>
+                <h4>Состояние комплектующих</h4>
+                <table class="w-100">
+                    <tr>
+                        <th>Все</th>
+                        <th>Произведено</th>
+                        <th>Зарезервировано</th>
+                        <th>Доставлено</th>
+                    </tr>
+                    <tr>
+                        <td id="productStatus0" th:text="${productStatus[1]}"></td>
+                        <td id="productStatus1"
+                            th:text="${productStatus[1] - productStatus[2] - productStatus[3]}"></td>
+                        <td id="productStatus2" th:text="${productStatus[2]}"></td>
+                        <td id="productStatus3" th:text="${productStatus[3]}"></td>
+                    </tr>
+                </table>
+                <hr>
+                <div id="productStatus" style="width: 100%; height: 500px;"></div>
+                <hr>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/theme.js"></script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load("current", {packages: ['corechart']});
+    google.charts.setOnLoadCallback(drawOrderStatus);
+    google.charts.setOnLoadCallback(drawOrderPrice);
+    google.charts.setOnLoadCallback(drawProductStatus);
+
+    function drawOrderStatus() {
+        var status1 = parseInt(document.querySelector('#orderingStatus1').textContent);
+        var status2 = parseInt(document.querySelector('#orderingStatus2').textContent);
+        var status3 = parseInt(document.querySelector('#orderingStatus3').textContent);
+        var status4 = parseInt(document.querySelector('#orderingStatus4').textContent);
+        var data = google.visualization.arrayToDataTable([
+            ['Статус', 'Заказы', {role: 'style'}, {role: 'annotation'}],
+            ['Зарезервировано', status1, "red", status1],
+            ['Не зарезервировано', status2, "brown", status2],
+            ['Доставка', status3, "green", status3],
+            ['Доставлено', status4, "blue", status4],
+        ]);
+
+
+        var options = {
+            title: 'Статусы заказов',
+            hAxis: {title: 'Статус'},
+            vAxis: {title: 'Количество'},
+            bar: {groupWidth: "80%"},
+            legend: {position: "none"}
+        };
+        var chart = new google.visualization.ColumnChart(document.getElementById('orderingStatus'));
+        chart.draw(data, options);
+    }
+
+    function drawOrderPrice() {
+        var price1 = parseInt(document.querySelector('#orderingPrice1').textContent);
+        var price2 = parseInt(document.querySelector('#orderingPrice2').textContent);
+        var price3 = parseInt(document.querySelector('#orderingPrice3').textContent);
+        var price4 = parseInt(document.querySelector('#orderingPrice4').textContent);
+        var data = google.visualization.arrayToDataTable([
+            ['Статус', 'Цена', {role: 'style'}, {role: 'annotation'}],
+            ['Зарезервировано', price1, "red", price1],
+            ['Не зарезервировано', price2, "brown", price2],
+            ['Доставка', price3, "green", price3],
+            ['Доставлено', price4, "blue", price4],
+        ]);
+        var options = {
+            title: 'Цена заказов',
+            hAxis: {title: 'Статус'},
+            vAxis: {title: 'Количество'},
+            bar: {groupWidth: "80%"},
+            legend: {position: "none"}
+        };
+        var chart = new google.visualization.ColumnChart(document.getElementById('orderingPrice'));
+        chart.draw(data, options);
+    }
+
+    function drawProductStatus() {
+        var product1 = parseInt(document.querySelector('#productStatus1').textContent);
+        var product2 = parseInt(document.querySelector('#productStatus2').textContent);
+        var product3 = parseInt(document.querySelector('#productStatus3').textContent);
+        var data = google.visualization.arrayToDataTable([
+            ['Состояние', 'Количество'],
+            ['Произведено', product1],
+            ['Зарезервировано', product2],
+            ['Доставлено', product3]
+        ]);
+
+        var options = {
+            title: 'Состояние комплектующих',
+            pieHole: 0.4,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('productStatus'));
+        chart.draw(data, options);
+    }
+</script>
+
+</body>
+
+</html>

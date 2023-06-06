@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Заказы</title>
+</head>
+
+<head th:insert="blocks\head :: head"></head>
+
+<body id="page-top">
+<div id="wrapper">
+    <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-success p-0 accent"
+         th:insert="blocks/navLeft :: nav" style="background: radial-gradient(#ced1c6, #02283a);"></nav>
+    <div class="d-flex flex-column" id="content-wrapper" style="background: rgb(220,220,220);">
+        <div id="content">
+            <div class="container-fluid">
+                <div th:if="${message}" class="text-center mt-20px mt-3">
+                    <div class="alert alert-success" role="alert">
+                        <strong><span th:text="${message}"></span></strong>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-dark mb-4 mt-3">Заказы</h3>
+                    <div class="row mb-5px">
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                            <label class="col-form-label text-center text-dark" for="clientId">
+                                <strong>Магазин</strong>
+                            </label>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <label class="col-form-label text-center text-dark" for="date">
+                                <strong>Дата</strong>
+                            </label>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-100px"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <form action="/ordering/add" method="post">
+                                <div class="row">
+                                    <div class="col">
+                                        <select class="form-select" name="clientId" id="clientId" required
+                                                onmousedown="if(this.options.length>5){this.size=5;}"
+                                                onchange='this.size=0;' onblur="this.size=0;">
+                                            <option th:each="client : ${clients}"
+                                                    th:value="${client.id}" th:label="${client.fio}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                                        <input class="form-control" type="date" name="date" id="date"
+                                               onfocus="this.min=new Date().toISOString().split('T')[0]" required>
+                                    </div>
+                                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-100px">
+                                        <button class="btn btn-outline-success btn-sm fs-16px" type="submit">Добавить
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row mb-5px">
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                            <label class="col-form-label text-center text-dark">
+                                <strong>Магазин</strong>
+                            </label>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <label class="col-form-label text-center text-dark">
+                                <strong>Дата</strong>
+                            </label>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <label class="col-form-label text-center text-dark">
+                                <strong>Стоимость заказа</strong>
+                            </label>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <label class="col-form-label text-center text-dark">
+                                <strong>Количество</strong>
+                            </label>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-100px"></div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-80px"></div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-150px">Действие</div>
+                    </div>
+                    <div th:each="ordering : ${orderings}" class="row mb-5px">
+                        <div class="col">
+                            <form th:action="'/ordering/' + ${ordering.id} + '/edit'" method="post">
+                                <div class="row">
+                                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                                        <input th:value="${ordering.client.fio}" class="form-control" type="text"
+                                               readonly>
+                                    </div>
+                                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                                        <input th:value="${ordering.date}" class="form-control" type="date" name="date"
+                                               onfocus="this.min=new Date().toISOString().split('T')[0]" required>
+                                    </div>
+                                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                                        <input th:value="${ordering.fullPrice}" class="form-control" type="number"
+                                               readonly>
+                                    </div>
+                                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                                        <input th:value="${ordering.fullQuantity}" class="form-control" type="number"
+                                               readonly>
+                                    </div>
+                                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-100px">
+                                        <button class="btn btn-outline-success btn-sm fs-16px" type="submit">Изменить
+                                        </button>
+                                    </div>
+                                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-80px">
+                                        <a th:href="'/ordering/' + ${ordering.id} + '/orderingDetail'"
+                                           class="btn btn-outline-success btn-sm fs-16px">Инфо</a>
+                                    </div>
+                                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-150px">
+                                        <select class="form-select"
+                                                onchange="window.location.href = this.options[this.selectedIndex].value">
+                                            <option value="/ordering">Выберите</option>
+                                            <option class="alert-success"
+                                                    th:value="'/ordering/' + ${ordering.id} + '/reserved'">Оформить
+                                            </option>
+                                            <option class="alert-danger"
+                                                    th:value="'/ordering/' + ${ordering.id} + '/delete'">Удалить
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <hr>
+                <div>
+                    <h3 class="text-dark mb-4">Ожидание</h3>
+                    <div class="row mb-5px">
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                            <label class="col-form-label text-center text-dark">
+                                <strong>Магазин</strong>
+                            </label>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <label class="col-form-label text-center text-dark">
+                                <strong>Дата</strong>
+                            </label>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <label class="col-form-label text-center text-dark">
+                                <strong>Стоимость заказа</strong>
+                            </label>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <label class="col-form-label text-center text-dark">
+                                <strong>Количество</strong>
+                            </label>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <label class="col-form-label text-center text-dark">
+                                <strong>Тип оплаты</strong>
+                            </label>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-100px"></div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-80px"></div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-150px">Действие
+                        </div>
+                    </div>
+                    <div th:each="payment : ${payments}" class="row mb-5px">
+                        <div class="col">
+                            <form th:action="'/ordering/payment/' + ${payment.getId()} + '/edit'" method="post">
+                                <div class="row">
+                                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                                        <input th:value="${payment.client.fio}" class="form-control" type="text"
+                                               readonly>
+                                    </div>
+                                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                                        <input th:value="${payment.date}" class="form-control" type="date" readonly>
+                                    </div>
+                                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                                        <input th:value="${payment.fullPrice}" class="form-control" type="number"
+                                               readonly>
+                                    </div>
+                                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                                        <input th:value="${payment.fullQuantity}" class="form-control" type="number"
+                                               readonly>
+                                    </div>
+                                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                                        <select class="form-select" name="paymentType">
+                                            <option th:each="paymentType : ${paymentTypes}"
+                                                    th:value="${paymentType}" th:label="${paymentType.getName()}"
+                                                    th:selected="${paymentType == payment.paymentType}">
+                                                Выберите
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-100px">
+                                        <button class="btn btn-outline-success btn-sm fs-16px" type="submit">
+                                            Изменить
+                                        </button>
+                                    </div>
+                                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-80px">
+                                        <a th:href="'/ordering/' + ${payment.id} + '/detail'"
+                                           class="btn btn-outline-success btn-sm fs-16px" type="submit">
+                                            Инфо
+                                        </a>
+                                    </div>
+                                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-150px">
+                                        <select class="form-select"
+                                                onchange="window.location.href = this.options[this.selectedIndex].value">
+                                            <option value="/ordering">Выберите</option>
+                                            <option class="alert-success"
+                                                    th:value="'/ordering/payment/' + ${payment.id} + '/shipment'">Доставить
+                                            </option>
+                                            <option class="alert-danger"
+                                                    th:value="'/ordering/payment/' + ${payment.id} + '/delete'">Удалить
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <hr>
+                <div>
+                    <h3 class="text-dark mb-4">Доставка</h3>
+                    <div class="row mb-5px">
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                            <label class="col-form-label text-center text-dark">
+                                <strong>Магазин</strong>
+                            </label>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <label class="col-form-label text-center text-dark">
+                                <strong>Дата</strong>
+                            </label>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <label class="col-form-label text-center text-dark">
+                                <strong>Стоимость заказа</strong>
+                            </label>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <label class="col-form-label text-center text-dark">
+                                <strong>Количество</strong>
+                            </label>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-80px"></div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-150px">Действие</div>
+                    </div>
+                    <div th:each="shipment : ${shipments}" class="row mb-5px">
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                            <input th:value="${shipment.client.fio}" class="form-control" type="text" readonly>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <input th:value="${shipment.date}" class="form-control" type="date" readonly>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <input th:value="${shipment.fullPrice}" class="form-control" type="number" readonly>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <input th:value="${shipment.fullQuantity}" class="form-control" type="number" readonly>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-80px">
+                            <a th:href="'/ordering/' + ${shipment.id} + '/detail'"
+                               class="btn btn-outline-success btn-sm fs-16px" type="submit">Инфо</a>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-150px">
+                            <select class="form-select"
+                                    onchange="window.location.href = this.options[this.selectedIndex].value">
+                                <option value="/ordering">Выберите</option>
+                                <option class="alert-success"
+                                        th:value="'/ordering/shipment/' + ${shipment.id} + '/shipped'">Доставлено
+                                </option>
+                                <option class="alert-danger"
+                                        th:value="'/ordering/shipment/' + ${shipment.id} + '/delete'">Удалить
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <hr>
+                <div>
+                    <h3 class="text-dark mb-4">Доставлено</h3>
+                    <div class="row mb-5px">
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                            <label class="col-form-label text-center text-dark">
+                                <strong>Магазин</strong>
+                            </label>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <label class="col-form-label text-center text-dark">
+                                <strong>Дата</strong>
+                            </label>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <label class="col-form-label text-center text-dark">
+                                <strong>Стоимость заказа</strong>
+                            </label>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <label class="col-form-label text-center text-dark">
+                                <strong>Количество</strong>
+                            </label>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-80px"></div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-90px"></div>
+                    </div>
+                    <div th:each="shipped : ${shippeds}" class="row mb-5px">
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                            <input th:value="${shipped.client.fio}" class="form-control" type="text" readonly>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <input th:value="${shipped.date}" class="form-control" type="date" readonly>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <input th:value="${shipped.fullPrice}" class="form-control" type="number" readonly>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <input th:value="${shipped.fullQuantity}" class="form-control" type="number" readonly>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-80px">
+                            <a th:href="'/ordering/' + ${shipped.id} + '/detail'"
+                               class="btn btn-outline-success btn-sm fs-16px" type="submit">Инфо</a>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-90px">
+                            <a th:href="'/ordering/shipped/' + ${shipped.id} + '/delete'"
+                               class="btn btn-outline-danger btn-sm fs-16px" type="submit">Удалить</a>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.select').change(function () {
+            window.location.href = $(this).val();
+        });
+    });
+</script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/theme.js"></script>
+</body>
+
+</html>

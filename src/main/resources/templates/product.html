@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Комплектующие</title>
+</head>
+
+<head th:insert="blocks\head :: head"></head>
+
+<body id="page-top">
+<div id="wrapper">
+    <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-success p-0 accent"
+         th:insert="blocks/navLeft :: nav" style="background: radial-gradient(#ced1c6, #02283a);"></nav>
+    <div class="d-flex flex-column" id="content-wrapper" style="background: rgb(220,220,220);">
+        <div id="content">
+            <div class="container-fluid">
+                <h3 class="text-dark mb-4 mt-3">Комплектующие</h3>
+                <div th:if="${message}" class="text-center mt-20px">
+                    <div class="alert alert-success" role="alert">
+                        <strong><span th:text="${message}"></span></strong>
+                    </div>
+                </div>
+                <hr>
+                <h5 class="text-dark mb-4">Добавить новый</h5>
+                <div class="row mb-5px">
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                        <label class="col-form-label text-center text-dark" for="name">
+                            <strong>Наименование</strong>
+                        </label>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                        <label class="col-form-label text-center text-dark" for="quantity">
+                            <strong>Количество</strong>
+                        </label>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                        <label class="col-form-label text-center text-dark" for="unitPrice">
+                            <strong>Цена за единицу</strong>
+                        </label>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-100px"></div>
+                </div>
+                <form action="/product/add" method="post" class="mb-20px">
+                    <div class="row">
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                            <input class="form-control" type="text" name="name" id="name" required>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <input class="form-control" type="number" min="1" name="quantity" id="quantity" required>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                            <input class="form-control" type="number" min="1" name="unitPrice" id="unitPrice" required>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-100px">
+                            <button class="btn btn-outline-success btn-sm fs-16px" type="submit">Добавить</button>
+                        </div>
+                    </div>
+                </form>
+                <hr>
+                <div class="row mb-5px black">
+                    <div class="col d-lg-flex justify-content-lg-start align-items-lg-start">
+                        <span class="justify-content-lg-start">Текущий остаток:&nbsp;</span>
+                        <span th:text="${quantity}" class="justify-content-lg-end"></span>
+                    </div>
+                </div>
+                <hr>
+                <h5 class="text-dark mb-4">Редактировать</h5>
+                <div class="row mb-5px">
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                        <label class="col-form-label text-center text-dark">
+                            <strong>Наименование</strong>
+                        </label>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                        <label class="col-form-label text-center text-dark">
+                            <strong>Количество</strong>
+                        </label>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                        <label class="col-form-label text-center text-dark">
+                            <strong>Цена за единицу</strong>
+                        </label>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-100px"></div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-90px"></div>
+                </div>
+                <div th:each="product : ${products}" class="row mb-5px">
+                    <div class="col">
+                        <form th:action="'/product/' + ${product.id} + '/edit'" method="post">
+                            <div class="row">
+                                <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                                    <input th:value="${product.name}" class="form-control" type="text" name="name" required>
+                                </div>
+                                <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                                    <input th:value="${product.quantity}" class="form-control" type="number" min="0"
+                                           name="quantity" required>
+                                </div>
+                                <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                                    <input th:value="${product.unitPrice}" class="form-control" type="number" min="1"
+                                           name="unitPrice" required>
+                                </div>
+                                <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-100px">
+                                    <button class="btn btn-outline-success btn-sm fs-16px" type="submit">
+                                        Изменить
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-90px">
+                        <a th:href="'/product/' + ${product.id} + '/delete'" class="btn btn-outline-danger btn-sm fs-16px">Удалить</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/theme.js"></script>
+</body>
+
+</html>

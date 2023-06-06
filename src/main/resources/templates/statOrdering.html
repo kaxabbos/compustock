@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Статистика заказов</title>
+</head>
+
+<head th:insert="blocks\head :: head"></head>
+
+<body id="page-top">
+<div id="wrapper">
+    <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-success p-0 accent"
+         th:insert="blocks/navLeft :: nav" style="background: radial-gradient(#ced1c6, #02283a);"></nav>
+    <div class="d-flex flex-column" id="content-wrapper" style="background: rgb(220,220,220);">
+        <div id="content">
+            <div class="container-fluid">
+                <h3 class="text-dark mb-4 mt-3">Заказы</h3>
+                <div class="row mb-5px">
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                        <label class="col-form-label text-center text-dark" for="orderingStatus">
+                            <strong>Состояние</strong>
+                        </label>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                        <label class="col-form-label text-center text-dark" for="orderingStatus">
+                            <strong>Дата</strong>
+                        </label>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-75px"></div>
+                </div>
+                <form action="/statOrdering/search" method="post" class="mb-20px">
+                    <div class="row">
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                            <select class="form-select" id="orderingStatus" name="orderingStatus">
+                                <option th:each="orderingStatus : ${statuses}"
+                                        th:value="${orderingStatus}" th:label="${orderingStatus.getName()}"
+                                        th:selected="${orderingStatus == selectedStatus}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                            <input th:value="${selectedDate}" class="form-control" type="date" id="date" name="date">
+                        </div>
+                        <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-75px">
+                            <button class="btn btn-outline-success btn-sm fs-16px" type="submit">Поиск</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="row">
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center"></div>
+                    <div class="col d-lg-flex justify-content-lg-start align-items-lg-start">
+                        <h6 class="text-dark justify-content-lg-start align-items-lg-start">
+                            *Если дата не выбрана, выбираются все
+                        </h6>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-75px"></div>
+                </div>
+                <hr>
+                <div class="row mb-5px">
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                        <label class="col-form-label text-center text-dark">
+                            <strong>Магазин</strong>
+                        </label>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                        <label class="col-form-label text-center text-dark">
+                            <strong>Дата</strong>
+                        </label>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                        <label class="col-form-label text-center text-dark">
+                            <strong>Стоимость заказа</strong>
+                        </label>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                        <label class="col-form-label text-center text-dark">
+                            <strong>Количество</strong>
+                        </label>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                        <label class="col-form-label text-center text-dark">
+                            <strong>Тип оплаты</strong>
+                        </label>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                        <label class="col-form-label text-center text-dark">
+                            <strong>Состояние</strong>
+                        </label>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-80px"></div>
+                </div>
+                <div th:each="ordering : ${orderings}" class="row mb-5px">
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                        <input th:value="${ordering.client.fio}" class="form-control" type="text" readonly>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-200px">
+                        <input th:value="${ordering.date}" class="form-control" type="date" name="date" readonly>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                        <input th:value="${ordering.fullPrice}" class="form-control" type="number" readonly>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                        <input th:value="${ordering.fullQuantity}" class="form-control" type="number" readonly>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                        <input th:value="${ordering.paymentType.getName()}" class="form-control" type="text" readonly>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center">
+                        <input th:value="${ordering.orderingStatus.getName()}" class="form-control" type="text"
+                               readonly>
+                    </div>
+                    <div class="col d-lg-flex justify-content-lg-center align-items-lg-center mxw-80px">
+                        <a th:href="'/ordering/' + ${ordering.id} + '/detail'"
+                           class="btn btn-outline-success btn-sm fs-16px" type="submit">
+                            Инфо
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/theme.js"></script>
+</body>
+
+</html>

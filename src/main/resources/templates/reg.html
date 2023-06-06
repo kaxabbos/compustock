@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Регистрация</title>
+</head>
+
+<head th:insert="blocks\head :: head"></head>
+
+<body class="bg-gradient-success" style="background: radial-gradient(#ced1c6, #02283a);">
+<div class="container">
+    <div class="card shadow-lg o-hidden border-0 my-5">
+        <div class="card-body p-0">
+            <div class="p-5">
+                <div class="text-center">
+                    <h4 class="text-dark mb-4">Создание профиля</h4>
+                </div>
+                <form action="/reg" method="post" class="users">
+                    <div class="mb-3">
+                        <input class="form-control form-control-users" type="text" placeholder="Логин" name="username"
+                               required>
+                    </div>
+                    <div class="mb-3">
+                        <input class="form-control form-control-users" type="text" placeholder="ФИО" name="fio"
+                               required>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-3 mb-sm-0">
+                            <input class="form-control form-control-users" type="password"
+                                   placeholder="Пароль" name="password" required>
+                        </div>
+                        <div class="col-sm-6">
+                            <input class="form-control form-control-users" type="password"
+                                   placeholder="Повторите пароль" name="passwordRepeat" required>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline-success btn-reg" type="submit">Зарегистрироваться</button>
+                </form>
+                <hr>
+                <div class="text-center">
+                    <a class="small mr-10px" href="/login">Вход</a>
+                </div>
+                <div th:if="${message}" class="text-center mt-20px">
+                    <div class="alert alert-success" role="alert">
+                        <strong><span th:text="${message}"></span></strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="text-center"></div>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/theme.js"></script>
+</body>
+
+</html>
